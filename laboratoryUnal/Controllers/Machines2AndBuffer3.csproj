@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Machines2AndBuffer3\Component1.cs" />
+    <Compile Remove="Machines2AndBuffer3\Component1.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Engine IO">
+      <HintPath>..\..\lib\Engine IO.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
