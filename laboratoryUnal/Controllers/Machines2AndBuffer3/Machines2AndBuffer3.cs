@@ -1,7 +1,6 @@
 ﻿using EngineIO;
 using System;
 using System.Diagnostics;
-using System.Threading;
 
 namespace Controllers.Scenes.MachinesAndBuffer
 {
@@ -22,6 +21,9 @@ namespace Controllers.Scenes.MachinesAndBuffer
         readonly MemoryBit mc1RedLight;
         readonly MemoryBit mc1YellowLight;
         readonly MemoryBit mc1GreenLight;
+        readonly MemoryBit mc1StartButtonLight;
+        readonly MemoryBit mc1RepairButtonLight;
+        readonly MemoryBit mc1FailButtonLight;
         readonly MemoryBit mc1AlarmSiren;
         readonly MemoryBit mc1PositionerRise;
         readonly MemoryBit mc1PositionerClamp;
@@ -39,6 +41,9 @@ namespace Controllers.Scenes.MachinesAndBuffer
         readonly MemoryBit mc2RedLight;
         readonly MemoryBit mc2YellowLight;
         readonly MemoryBit mc2GreenLight;
+        readonly MemoryBit mc2StartButtonLight;
+        readonly MemoryBit mc2RepairButtonLight;
+        readonly MemoryBit mc2FailButtonLight;
         readonly MemoryBit mc2AlarmSiren;
         readonly MemoryBit mc2PositionerClamp;
         readonly MemoryBit mc2PositionerRise;
@@ -102,7 +107,6 @@ namespace Controllers.Scenes.MachinesAndBuffer
 
         //Others
         bool initialStateMessagePrinted;
-        Reader reader;
         bool changeStateMessagePrinted;
         string newState;
         string newStateName;
@@ -238,6 +242,9 @@ namespace Controllers.Scenes.MachinesAndBuffer
             mc1RedLight = MemoryMap.Instance.GetBit("Stack Light 0 (Red)", MemoryType.Output);
             mc1YellowLight = MemoryMap.Instance.GetBit("Stack Light 0 (Yellow)", MemoryType.Output);
             mc1GreenLight = MemoryMap.Instance.GetBit("Stack Light 0 (Green)", MemoryType.Output);
+            mc1StartButtonLight = MemoryMap.Instance.GetBit("Start mc1 (Light)", MemoryType.Output);
+            mc1RepairButtonLight = MemoryMap.Instance.GetBit("Repair mc1 (Light)", MemoryType.Output);
+            mc1FailButtonLight = MemoryMap.Instance.GetBit("Failure mc1 (Light)", MemoryType.Output);
             mc1AlarmSiren = MemoryMap.Instance.GetBit("Alarm Siren 0", MemoryType.Output);
             mc1PositionerRise = MemoryMap.Instance.GetBit("Right Positioner 0 (Raise)", MemoryType.Output);
             mc1PositionerClamp = MemoryMap.Instance.GetBit("Right Positioner 0 (Clamp)", MemoryType.Output);
@@ -271,6 +278,9 @@ namespace Controllers.Scenes.MachinesAndBuffer
             mc2RedLight = MemoryMap.Instance.GetBit("Stack Light 1 (Red)", MemoryType.Output);
             mc2YellowLight = MemoryMap.Instance.GetBit("Stack Light 1 (Yellow)", MemoryType.Output);
             mc2GreenLight = MemoryMap.Instance.GetBit("Stack Light 1 (Green)", MemoryType.Output);
+            mc2StartButtonLight = MemoryMap.Instance.GetBit("Start mc2 (Light)", MemoryType.Output);
+            mc2RepairButtonLight = MemoryMap.Instance.GetBit("Repair mc2 (Light)", MemoryType.Output);
+            mc2FailButtonLight = MemoryMap.Instance.GetBit("Failure mc2 (Light)", MemoryType.Output);
             mc2AlarmSiren = MemoryMap.Instance.GetBit("Alarm Siren 1", MemoryType.Output);
             mc2PositionerClamp = MemoryMap.Instance.GetBit("Right Positioner 3 (Clamp)", MemoryType.Output);//mc2 positioner clamp
             mc2PositionerRise = MemoryMap.Instance.GetBit("Right Positioner 3 (Raise)", MemoryType.Output);//mc2 positioner rise
@@ -391,7 +401,6 @@ namespace Controllers.Scenes.MachinesAndBuffer
             initialStateMessagePrinted = false;
 
             //Others
-            reader = new Reader();
             changeStateMessagePrinted = false;
             newState = "";
             newStateName = "";
@@ -416,11 +425,46 @@ namespace Controllers.Scenes.MachinesAndBuffer
             // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FAILING TIME AND DISPLAY START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             displayMc1.Value = float.Parse(String.Format("{0:0.0}", potentiometerMc1.Value));
             displayMc2.Value = float.Parse(String.Format("{0:0.0}", potentiometerMc2.Value));
-            
-            
+
+
             // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FAILING TIME AND DISPLAY END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+            //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BUTTON LIGHTS START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+            //mc1
+            if (supervisoryControl.IsInActiveEventsLights("s1"))
+                mc1StartButtonLight.Value = true;
+            else
+                mc1StartButtonLight.Value = false;
+
+            if (supervisoryControl.IsInActiveEventsLights("r1"))
+                mc1RepairButtonLight.Value = true;
+            else
+                mc1RepairButtonLight.Value = false;
+
+            if (!mc1Failed)
+                mc1FailButtonLight.Value = true;
+            else
+                mc1FailButtonLight.Value = false;
+
+            //mc2
+            if (supervisoryControl.IsInActiveEventsLights("s2"))
+                mc2StartButtonLight.Value = true;
+            else
+                mc2StartButtonLight.Value = false;
+
+            if (supervisoryControl.IsInActiveEventsLights("r2"))
+                mc2RepairButtonLight.Value = true;
+            else
+                mc2RepairButtonLight.Value = false;
+
+            if (!mc2Failed)
+                mc2FailButtonLight.Value = true;
+            else
+                mc2FailButtonLight.Value = false;
+
+
+            //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BUTTON LIGHTS END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONTROLLABLE EVENTS START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
