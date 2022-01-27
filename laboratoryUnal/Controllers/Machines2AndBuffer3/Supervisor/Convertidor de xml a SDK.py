@@ -277,5 +277,4 @@ if __name__ == '__main__':
     run_button.config(state="disabled")
     run_button.grid(column=1, row=1)
     #Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-    print("yeah")
     root.mainloop()
