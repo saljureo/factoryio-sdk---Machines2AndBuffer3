@@ -157,6 +157,18 @@ def xml2sdk(XmlFileName):
     f.write('                return (false);\n')
     f.write('            }\n')
     f.write("        }\n\n")
+    f.write("        public bool IsInActiveEventsString(string newStateString)\n")
+    f.write("        {\n")
+    f.write('            int newState = eventLabels[newStateString];\n')
+    f.write('            if (transiciones.ContainsKey((currentState, newState)) && eventLabelsInverse[newState].Item2 == "c")\n')
+    f.write('            {\n')
+    f.write('                return (true);\n')
+    f.write('            }\n')
+    f.write('            else\n')
+    f.write('            {\n')
+    f.write('                return (false);\n')
+    f.write('            }\n')
+    f.write("        }\n\n")
     f.write("        public void ListOfActiveEvents()\n")
     f.write("        {\n")
     stringy = '            Console.WriteLine("----------------------------------------' + r'\n' + '");\n'
@@ -276,5 +288,5 @@ if __name__ == '__main__':
     run_button = ttk.Button(frm, text="Run xml2SDK", command=run_xml_to_sdk)
     run_button.config(state="disabled")
     run_button.grid(column=1, row=1)
-    #Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+    #Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing    
     root.mainloop()
