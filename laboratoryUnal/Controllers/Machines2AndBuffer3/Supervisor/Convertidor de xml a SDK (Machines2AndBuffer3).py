@@ -53,11 +53,12 @@ def xml2sdk(XmlFileName):
     #        break
     #    else:
     #        factoryIoFileName = factoryIoFileName + letter
-    #csFileName = factoryIoFileName + 'Supervisor.cs'
+    factoryIoFileName = 'Machines2AndBuffer3'
+    csFileName = factoryIoFileName + 'Supervisor.cs'
     try:
-        f = open("Machines2AndBuffer3Supervisor.cs", "x")
+        f = open(csFileName, "x")
     except:
-        f = open("Machines2AndBuffer3Supervisor.cs", "w")
+        f = open(csFileName, "w")
 
     ##############  PROGRAM WRITING STARTS  ########################
     #Headers
@@ -257,7 +258,7 @@ def xml2sdk(XmlFileName):
     f.write('}')
     f.close()
         
-    print("\n\nFile named Machines2AndBuffer3Supervisor.cs created succesfully.\n\n")
+    print("\n\nFile named " + csFileName + " created succesfully.\n\n")
 
 
 def get_file():
